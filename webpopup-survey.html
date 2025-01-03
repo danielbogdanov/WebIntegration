@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+       .CT_Interstitial {
+           background-color: #fffeeb;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           padding: 2rem;
+           font-family: Arial, sans-serif;
+       }
+       
+       .survey-container {
+           max-width: 600px;
+           width: 100%;
+           text-align: center;
+       }
+       
+       .question {
+           font-size: 1.5rem;
+           margin-bottom: 2rem;
+           color: #333;
+       }
+       
+       .options {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 1rem;
+       }
+       
+       .option-btn {
+           padding: 1rem;
+           border: 2px solid #007bff;
+           background-color: white;
+           border-radius: 8px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           font-size: 1rem;
+       }
+       
+       .option-btn:hover {
+           background-color: #007bff;
+           color: white;
+       }
+       
+       .submitted {
+           display: none;
+           font-size: 1.2rem;
+           color: #28a745;
+           margin-top: 2rem;
+       }
+   </style>
+</head>
+<body>
+   <div class="CT_Interstitial">
+       <div class="survey-container">
+           <div class="question">How did you hear about us?</div>
+           <div class="options">
+               <button class="option-btn">Social Media</button>
+               <button class="option-btn">Search Engine</button>
+               <button class="option-btn">Word of Mouth</button>
+               <button class="option-btn">Online Ad</button>
+               <button class="option-btn">Blog Post</button>
+               <button class="option-btn">Email Newsletter</button>
+               <button class="option-btn">YouTube</button>
+               <button class="option-btn">Podcast</button>
+               <button class="option-btn">Conference/Event</button>
+               <button class="option-btn">Print Media</button>
+               <button class="option-btn">Other</button>
+           </div>
+           <div class="submitted">Thank you for your feedback!</div>
+       </div>
+   </div>
+
+   <script>
+       document.querySelectorAll('.option-btn').forEach(button => {
+           button.addEventListener('click', function() {
+               // Record the selection
+               const selection = this.textContent;
+               console.log('User selected:', selection);
+
+               
+               // Show thank you message
+               document.querySelector('.submitted').style.display = 'block';
+               
+               // Disable all buttons
+               document.querySelectorAll('.option-btn').forEach(btn => {
+                   btn.disabled = true;
+                   btn.style.opacity = '0.5';
+               });
+               
+               // Highlight selected button
+               this.style.backgroundColor = '#007bff';
+               this.style.color = 'white';
+               this.style.opacity = '1';
+
+               // Send selection to clevertap
+                clevertap.event.push("Survey Response", {
+                     "Survey Answer": selection
+                });
+           });
+       });
+   </script>
+</body>
+</html>
