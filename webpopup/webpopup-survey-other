@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<style>
+body {
+    background-color: #e6e6fa;
+}
+.radio-option {
+    margin: 10px 0;
+}
+#otherInput {
+    display: none;
+    margin: 5px 0 5px 25px;
+    padding: 5px;
+}
+</style>
+<body>
+    <h1>Survey Form</h1>
+    <p>Where did you hear about us?</p>
+    <div class="radio-option">
+        <input type="radio" id="social_media" name="heard_from" value="Social Media" />
+        <label for="social_media">Social Media</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="friend" name="heard_from" value="Friend or Family" />
+        <label for="friend">Friend or Family</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="search" name="heard_from" value="Search Engine" />
+        <label for="search">Search Engine</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="advertisement" name="heard_from" value="Advertisement" />
+        <label for="advertisement">Advertisement</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="blog" name="heard_from" value="Blog or Article" />
+        <label for="blog">Blog or Article</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="email" name="heard_from" value="Email Marketing" />
+        <label for="email">Email Marketing</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="event" name="heard_from" value="Event or Conference" />
+        <label for="event">Event or Conference</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="tv" name="heard_from" value="TV or Radio" />
+        <label for="tv">TV or Radio</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="press" name="heard_from" value="Press or News" />
+        <label for="press">Press or News</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="billboard" name="heard_from" value="Billboard or Outdoor" />
+        <label for="billboard">Billboard or Outdoor</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="other" name="heard_from" value="Other" onclick="toggleOtherInput()" />
+        <label for="other">Other</label>
+        <input type="text" id="otherInput" placeholder="Please specify" />
+    </div>
+    <br />
+    <button type="button" value="Submit" onclick="myFunction()">Submit</button>
+    <div id="result"></div>
+
+    <script type="text/javascript">
+
+        document.querySelectorAll('input[name="heard_from"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('otherInput').style.display = 
+                    this.id === 'other' ? 'block' : 'none';
+            });
+        });
+
+        function myFunction() {
+            var heardFrom = getHeardFrom();
+            var evtProps = {
+                heard_from: heardFrom
+            };
+            
+            if (window.CleverTap) {
+                CleverTap.pushEvent("Survey Form Filled", JSON.stringify(evtProps));
+                CleverTap.pushProfile(JSON.stringify(evtProps));
+            }
+
+            var evtMessage = {
+                action: "recordEventWithProps",
+                event: "Survey Form Filled",
+                properties: evtProps
+            };
+
+            var profileMessage = {
+                action: "profilePush",
+                properties: evtProps
+            };
+
+            if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.clevertap) {
+                window.webkit.messageHandlers.clevertap.postMessage(evtMessage);
+                window.webkit.messageHandlers.clevertap.postMessage(profileMessage);
+            }
+
+            closediv();
+        }
+
+        function getHeardFrom() {
+            var ele = document.getElementsByName("heard_from");
+            for (i = 0; i < ele.length; i++) {
+                if (ele[i].checked) {
+                    if (ele[i].value === "Other") {
+                        var otherValue = document.getElementById("otherInput").value.trim();
+                        return otherValue ? "Other: " + otherValue : "Other";
+                    }
+                    return ele[i].value;
+                }
+            }
+        }
+
+        function closediv() {
+            window.location.replace("wzrk://thisisadummylink");
+        }
+    </script>
+</body>
+</html>
